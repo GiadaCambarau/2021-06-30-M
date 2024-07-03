@@ -5,6 +5,7 @@
 package it.polito.tdp.genes;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.genes.model.Model;
@@ -38,12 +39,41 @@ public class FXMLController {
 
     @FXML
     void doContaArchi(ActionEvent event) {
-
+    	if (txtSoglia.getText() != "") {
+    		String input = txtSoglia.getText();
+    		double s  = 0;
+    		try {
+    			s = Double.parseDouble(input);
+    			if (s>= model.getMin() && s<= model.getMax()) {
+        			txtResult.appendText("Il numero di archi maggiori di s è: " +model.contaMaggiori(s)+"\n");
+        			txtResult.appendText("Il numero di archi minori di s è: " +model.contaMinori(s)+"\n");
+        		}
+    		}catch (NumberFormatException e) {
+				txtResult.setText("Numero");;
+			}
+    		
+    	}else {
+    		txtResult.setText("Inserisci un valore di soglia");
+    	}
     }
 
     @FXML
     void doRicerca(ActionEvent event) {
-
+    	if (txtSoglia.getText() != "") {
+    		String input = txtSoglia.getText();
+    		double s  = 0;
+    		try {
+    			s = Double.parseDouble(input);
+    			txtResult.appendText("Percorso: "+"\n");
+    			List<Integer> lista = model.cercaPercorso(s);
+    			for (Integer i: lista) {
+    				txtResult.appendText(i + "\n");
+    			}
+    			txtResult.appendText("Il peso del cammino è: "+model.calcolaPeso(lista));
+    		}catch (NumberFormatException e) {
+				txtResult.setText("Numero");
+    		}
+    	}
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -57,6 +87,9 @@ public class FXMLController {
 
 	public void setModel(Model model) {
 		this.model = model ;
-		
+		model.creaGrafo();
+		txtResult.appendText("Vertici: "+ model.getV()+"\n");
+		txtResult.appendText("Archi: "+ model.getA()+"\n");
+		txtResult.appendText("Il peso massimo è: "+ model.getMax() + "\n Il peso minimo è "+ model.getMin()+"\n" );
 	}
 }
